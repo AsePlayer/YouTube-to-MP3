@@ -1,3 +1,5 @@
+import os
+
 import eyed3
 from eyed3.id3.frames import ImageFrame
 from utils import check_slang
@@ -21,5 +23,6 @@ def edit_metadata(file_path, artist, genre, thumbnail_path=None):
     if thumbnail_path:
         with open(thumbnail_path, 'rb') as img_file:
             audiofile.tag.images.set(ImageFrame.FRONT_COVER, img_file.read(), 'image/jpeg')
+        os.remove(thumbnail_path)
 
     audiofile.tag.save()
