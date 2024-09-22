@@ -24,14 +24,14 @@ def on_download():
     if not genre.strip():
         genre = download_path.split('/')[-1]
 
-    downloaded_file, channel_name = download_youtube_video_section_as_mp3(
+    downloaded_file, channel_name, thumbnail_path = download_youtube_video_section_as_mp3(
         video_url, start_time, end_time, download_path, override_title
     )
 
     if downloaded_file:
         artist_name = override_artist if override_artist else channel_name
-        edit_metadata(f"{download_path}/{downloaded_file}", artist_name, genre)
-        messagebox.showinfo("Result", "Download complete and metadata updated.")
+        edit_metadata(f"{download_path}/{downloaded_file}", artist_name, genre, thumbnail_path)
+        messagebox.showinfo("Result", "Download complete, metadata updated, and album art added.")
     else:
         messagebox.showerror("Error", channel_name)
 
@@ -42,6 +42,7 @@ def on_download():
     genre_entry.delete(0, tk.END)
     artist_entry.delete(0, tk.END)
     title_entry.delete(0, tk.END)
+
 
 
 def choose_directory():
