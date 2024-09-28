@@ -1,6 +1,6 @@
+import yt_dlp
 import tkinter as tk
 from tkinter import messagebox, filedialog
-import yt_dlp
 
 from downloader import download_youtube_video_section_as_mp3
 from metadata import edit_metadata
@@ -17,6 +17,8 @@ def on_download():
     override_artist = artist_entry.get()
     override_title = title_entry.get()
 
+    thumbnail_aspect_ratio = aspect_ratio.get()
+
     start_time = timestamp_to_seconds(start_time_input) if start_time_input else 0
     end_time = timestamp_to_seconds(end_time_input) if end_time_input else None
 
@@ -25,7 +27,7 @@ def on_download():
         genre = download_path.split('/')[-1]
 
     downloaded_file, channel_name, thumbnail_path = download_youtube_video_section_as_mp3(
-        video_url, start_time, end_time, download_path, override_title
+        video_url, start_time, end_time, download_path, override_title, thumbnail_aspect_ratio
     )
 
     if downloaded_file:
@@ -127,21 +129,37 @@ tk.Label(root, text="Override Artist(s):").grid(row=5, column=0, sticky='e', pad
 artist_entry = tk.Entry(root, width=50)
 artist_entry.grid(row=5, column=1, padx=10, pady=10)
 
-# Autofill button
-autofill_button = tk.Button(root, text="Autofill", command=autofill)
-autofill_button.grid(row=6, column=0, columnspan=1, pady=5)
+# Information label about Overrides
+tk.Label(root, text="Album Art Type:").grid(row=6, column=0, sticky='e', padx=10, pady=10)
+
+# Create a frame for radio buttons to place them side by side
+thumbnail_mode_frame = tk.Frame(root)
+thumbnail_mode_frame.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
+
+# Radio buttons for thumbnail mode selection (side by side within the frame)
+thumbnail_mode_var = tk.StringVar(value="16:9")  # Default to 1:1 thumbnail
+
+radio_1_1 = tk.Radiobutton(thumbnail_mode_frame, text="1:1", variable=thumbnail_mode_var, value="1:1")
+radio_1_1.pack(side="left", padx=5)
+
+radio_16_9 = tk.Radiobutton(thumbnail_mode_frame, text="16:9", variable=thumbnail_mode_var, value="16:9")
+radio_16_9.pack(side="left", padx=5)
+
+# Move the Autofill button next to the radio buttons but with a little spacing
+autofill_button = tk.Button(root, text="Autofill Info", command=autofill)
+autofill_button.grid(row=6, column=1, padx=10, sticky='e')
 
 # Download MP3 button
 download_button = tk.Button(root, text="Download MP3", command=on_download)
-download_button.grid(row=6, column=0, columnspan=2, pady=10)
+download_button.grid(row=7, column=0, columnspan=2, pady=10)
 
 # Directory label
 directory_label = tk.Label(root, text=f"Download Directory: {download_path}")
-directory_label.grid(row=7, column=0, columnspan=2, pady=5)
+directory_label.grid(row=8, column=0, columnspan=2, pady=5)
 
 # Choose Directory button
 directory_button = tk.Button(root, text="Choose Download Directory", command=choose_directory)
-directory_button.grid(row=8, column=0, columnspan=2, pady=5)
+directory_button.grid(row=9, column=0, columnspan=2, pady=5)
 
 
 # Run the Tkinter event loop
