@@ -1,3 +1,5 @@
+import os
+
 import yt_dlp
 import tkinter as tk
 from tkinter import messagebox, filedialog
@@ -37,9 +39,8 @@ def on_download():
     else:
         messagebox.showerror("Error", channel_name)
 
-    # Clear the entry fields after download if not clipping
+    # After download, clear the entry fields (if not clipping a certain section)
     if start_entry.get() == "" and end_entry.get() == "":
-        # Inconvenient when testing the best clip values
         clear_entries()
 
 def choose_directory():
@@ -49,6 +50,9 @@ def choose_directory():
     if download_path:
         directory_label.config(text=f"Download Directory: {download_path}")
 
+
+def open_directory():
+    os.startfile(download_path)
 
 def autofill():
     """Autofill artist and title fields based on the YouTube video information."""
@@ -90,7 +94,7 @@ root.title("YouTube MP3 Downloader - by Ryan Scott")
 root.resizable(False, False)  # Disable resizing
 
 # Initialize download path
-download_path = "D:/Music/iTunes Local Files"
+download_path = "."
 
 # Use grid layout and padding to improve UI appearance
 root.grid_columnconfigure(0, weight=1)
@@ -111,13 +115,17 @@ tk.Label(root, text="End Time (mm:ss or ss):").grid(row=2, column=0, sticky='e',
 end_entry = tk.Entry(root, width=10, justify='center')
 end_entry.grid(row=2, column=1, padx=10, pady=10, sticky='w')
 
+# Move the Autofill button next to the radio buttons but with a little spacing
+autofill_button = tk.Button(root, text="Autofill Info", command=autofill)
+autofill_button.grid(row=2, column=1, padx=10, sticky='e')
+
 # Override Genre
 tk.Label(root, text="Override Genre:").grid(row=3, column=0, sticky='e', padx=10, pady=10)
 genre_entry = tk.Entry(root, width=10, justify='center')
 genre_entry.grid(row=3, column=1, padx=10, pady=10, sticky='w')
 
 # Information label about Overrides
-tk.Label(root, text="(Leave overrides blank to use defaults)").grid(row=3, column=1, sticky='e', padx=10, pady=10)
+tk.Label(root, text="(Leave overrides blank to use defaults)").grid(row=3, column=1, sticky='e', padx=10)
 
 # Override Title
 tk.Label(root, text="Override Title:").grid(row=4, column=0, sticky='e', padx=10, pady=10)
@@ -130,37 +138,41 @@ artist_entry = tk.Entry(root, width=50)
 artist_entry.grid(row=5, column=1, padx=10, pady=10)
 
 # Information label about Overrides
-tk.Label(root, text="Album Art Type:").grid(row=6, column=0, sticky='e', padx=10, pady=10)
+tk.Label(root, text="Album Art Size:").grid(row=6, column=0, sticky='e', padx=10, pady=10)
 
 # Create a frame for radio buttons to place them side by side
 thumbnail_mode_frame = tk.Frame(root)
 thumbnail_mode_frame.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
 
 # Radio buttons for thumbnail mode selection (side by side within the frame)
-thumbnail_mode_var = tk.StringVar(value="16:9")  # Default to 1:1 thumbnail
+aspect_ratio = tk.StringVar(value="16:9")  # Default to 1:1 thumbnail
 
-radio_1_1 = tk.Radiobutton(thumbnail_mode_frame, text="1:1", variable=thumbnail_mode_var, value="1:1")
+radio_1_1 = tk.Radiobutton(thumbnail_mode_frame, text="1:1", variable=aspect_ratio, value="1:1")
 radio_1_1.pack(side="left", padx=5)
 
-radio_16_9 = tk.Radiobutton(thumbnail_mode_frame, text="16:9", variable=thumbnail_mode_var, value="16:9")
+radio_16_9 = tk.Radiobutton(thumbnail_mode_frame, text="16:9", variable=aspect_ratio, value="16:9")
 radio_16_9.pack(side="left", padx=5)
-
-# Move the Autofill button next to the radio buttons but with a little spacing
-autofill_button = tk.Button(root, text="Autofill Info", command=autofill)
-autofill_button.grid(row=6, column=1, padx=10, sticky='e')
 
 # Download MP3 button
 download_button = tk.Button(root, text="Download MP3", command=on_download)
-download_button.grid(row=7, column=0, columnspan=2, pady=10)
+download_button.grid(row=6, column=1, padx=10, sticky='e')
 
 # Directory label
 directory_label = tk.Label(root, text=f"Download Directory: {download_path}")
-directory_label.grid(row=8, column=0, columnspan=2, pady=5)
+directory_label.grid(row=7, column=0, columnspan=2, pady=5)
+
+
+# Create a frame for directory buttons to place them side by side
+directory_frame = tk.Frame(root)
+directory_frame.grid(row=8, column=0, columnspan=2, padx=10, pady=5)
 
 # Choose Directory button
-directory_button = tk.Button(root, text="Choose Download Directory", command=choose_directory)
-directory_button.grid(row=9, column=0, columnspan=2, pady=5)
+directory_button = tk.Button(directory_frame, text="Choose Directory", command=choose_directory)
+directory_button.pack(side="left", padx=5)
 
+# Open Directory button
+directory_open_button = tk.Button(directory_frame, text="Open Directory", command=open_directory)
+directory_open_button.pack(side="left", padx=5)
 
 # Run the Tkinter event loop
 root.mainloop()
