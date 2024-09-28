@@ -1,0 +1,5 @@
+yt-dip
+tkinter
+Pillow
+eyed3
+requests
