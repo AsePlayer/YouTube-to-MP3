@@ -35,15 +35,10 @@ def on_download():
     else:
         messagebox.showerror("Error", channel_name)
 
-    # Clear the entry fields after download
-    url_entry.delete(0, tk.END)
-    start_entry.delete(0, tk.END)
-    end_entry.delete(0, tk.END)
-    genre_entry.delete(0, tk.END)
-    artist_entry.delete(0, tk.END)
-    title_entry.delete(0, tk.END)
-
-
+    # Clear the entry fields after download if not clipping
+    if start_entry.get() == "" and end_entry.get() == "":
+        # Inconvenient when testing the best clip values
+        clear_entries()
 
 def choose_directory():
     """Open a dialog to choose the download directory."""
@@ -71,12 +66,21 @@ def autofill():
         messagebox.showerror("Error", e)
         return
 
+    clear_entries()
+
     artist_entry.delete(0, tk.END)
     artist_entry.insert(0, channel_name)
 
     title_entry.delete(0, tk.END)
     title_entry.insert(0, video_title)  # Autofill the title field
 
+
+def clear_entries():
+    start_entry.delete(0, tk.END)
+    end_entry.delete(0, tk.END)
+    genre_entry.delete(0, tk.END)
+    artist_entry.delete(0, tk.END)
+    title_entry.delete(0, tk.END)
 
 # Set up the Tkinter window
 root = tk.Tk()
@@ -110,6 +114,7 @@ tk.Label(root, text="Override Genre:").grid(row=3, column=0, sticky='e', padx=10
 genre_entry = tk.Entry(root, width=10, justify='center')
 genre_entry.grid(row=3, column=1, padx=10, pady=10, sticky='w')
 
+# Information label about Overrides
 tk.Label(root, text="(Leave overrides blank to use defaults)").grid(row=3, column=1, sticky='e', padx=10, pady=10)
 
 # Override Title
@@ -124,7 +129,11 @@ artist_entry.grid(row=5, column=1, padx=10, pady=10)
 
 # Autofill button
 autofill_button = tk.Button(root, text="Autofill", command=autofill)
-autofill_button.grid(row=6, column=0, columnspan=2, pady=5)
+autofill_button.grid(row=6, column=0, columnspan=1, pady=5)
+
+# Download MP3 button
+download_button = tk.Button(root, text="Download MP3", command=on_download)
+download_button.grid(row=6, column=0, columnspan=2, pady=10)
 
 # Directory label
 directory_label = tk.Label(root, text=f"Download Directory: {download_path}")
@@ -134,9 +143,6 @@ directory_label.grid(row=7, column=0, columnspan=2, pady=5)
 directory_button = tk.Button(root, text="Choose Download Directory", command=choose_directory)
 directory_button.grid(row=8, column=0, columnspan=2, pady=5)
 
-# Download MP3 button
-download_button = tk.Button(root, text="Download MP3", command=on_download)
-download_button.grid(row=9, column=0, columnspan=2, pady=10)
 
 # Run the Tkinter event loop
 root.mainloop()
