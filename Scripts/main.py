@@ -5,9 +5,11 @@ import tkinter as tk
 from tkinter import messagebox, filedialog
 
 from downloader import download_youtube_video_section_as_mp3
+from downloader import ffmpeg_path
 from metadata import edit_metadata
 from utils import timestamp_to_seconds
 
+# BUILD: pyinstaller --onefile --noconsole -- add-data "ffmpeg;ffmpeg" main.py
 
 def on_download():
     """Handle the download button click event."""
@@ -56,8 +58,6 @@ def open_directory():
 
 def autofill():
     """Autofill artist and title fields based on the YouTube video information."""
-    ffmpeg_path = 'venv\\Lib\\external\\ffmpeg.exe'  # Update this to your ffmpeg path
-
     ydl_opts = {
         'ffmpeg_location': ffmpeg_path
     }
@@ -158,7 +158,7 @@ download_button = tk.Button(root, text="Download MP3", command=on_download)
 download_button.grid(row=6, column=1, padx=10, sticky='e')
 
 # Directory label
-directory_label = tk.Label(root, text=f"Download Directory: {download_path}")
+directory_label = tk.Label(root, text=f"\nDownload Directory: {download_path}")
 directory_label.grid(row=7, column=0, columnspan=2, pady=5)
 
 
