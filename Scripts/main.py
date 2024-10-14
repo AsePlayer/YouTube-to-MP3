@@ -41,9 +41,9 @@ def on_download():
     else:
         messagebox.showerror("Error", channel_name)
 
-    # After download, clear the entry fields (if not clipping a certain section)
-    if start_entry.get() == "" and end_entry.get() == "":
-        clear_entries()
+    # # After download, clear the entry fields (if not clipping a certain section)
+    # if start_entry.get() == "" and end_entry.get() == "":
+    #     clear_entries()
 
 def choose_directory():
     """Open a dialog to choose the download directory."""
